@@ -34,7 +34,9 @@ const SolicitudesComercios = () => {
   const [messageDefault, setMessageDefault] = useState({ message: "", modal: false })
 
   const theme = useTheme()
-  const { data: comercios, loading, error } = useFetch("/Tur_comercio/read")
+  const { data: comercios, loading, error } = useFetch(
+    'https://recreas.net/BackEnd/Tur_comercio/read?idCate=1'
+  )
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)

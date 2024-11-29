@@ -6,13 +6,39 @@ import useFetch from "../hooks/useFetch"
 import validateInputs from "../modules/validateInputs"
 import "../components/RegistroComercio/ContentForm.css"
 
+interface _FormData {
+  comercioNumero: string
+  razonSocial: string
+  cuit: string
+  nombreFantasia: string
+  direccion: string
+  googleMaps: string
+  whatsapp: string
+  responsableNombre: string
+  dni: string
+  email: string
+  telefono: string
+}
+
 const steps = ["Información del Comercio", "Datos del Propietario", "Confirmación"]
 
 const RegistroComercio = () => {
   const [activeStep, setActiveStep] = useState(0)
-  const [formData, setFormData] = useState({
-    confirmacion: false,
-  })
+  const [formData, setFormData] = useState<_FormData>(
+    {
+      comercioNumero: '',
+      razonSocial: '',
+      cuit: '',
+      nombreFantasia: '',
+      direccion: '',
+      googleMaps: '',
+      whatsapp: '',
+      responsableNombre: '',
+      dni: '',
+      email: '',
+      telefono: '',
+    }
+  )
   const [errors, setErrors] = useState<any>({})
   const { execute } = useFetch()
 
@@ -30,15 +56,31 @@ const RegistroComercio = () => {
 
     if (Object.keys(validateErrors).length === 0) {
       try {
-        const response: any = await execute("/backend", "POST", formData, {
-          "Content-Type": "application/json",
-        })
 
-        if (response.status === "success") {
-          setActiveStep((prev) => prev + 1)
+        const formData2 = new FormData()
+        formData2.append('comercioNumero', formData.comercioNumero)
+        formData2.append('razonSocial', formData.razonSocial)
+        formData2.append('nombreFantasia', formData.nombreFantasia)
+        formData2.append('direccion', formData.direccion)
+        formData2.append('googleMaps', formData.googleMaps)
+
+        formData2.append('whatsapp', formData.whatsapp)
+        formData2.append('responsableNombre', formData.responsableNombre)
+        formData2.append('dni', formData.dni)
+
+        formData2.append('email', formData.email)
+        formData2.append('telefono', formData.telefono)
+
+
+        const response: any = await execute("https://recreas.net/BackEnd/Tur_comercio/insert", "POST", formData2, {
+          "Content-Type": "multipart/form-data",
+        })
+        setActiveStep((prev) => prev + 1)
+        /*if (response.status === "success") {
+          
         } else {
           console.error("Error en la respuesta del servidor:", response.message)
-        }
+        }*/
       } catch (error) {
         console.error("Error al realizar la solicitud:", error)
       }
@@ -65,10 +107,6 @@ const RegistroComercio = () => {
           formData={formData}
           errors={errors}
           setFormData={setFormData}
-          steps={steps}
-          handleBack={handleBack}
-          handleNext={handleNext}
-          handleSubmit={handleSubmit}
         />
       </Box>
       <Box sx={{ display: "flex", gap: "2rem", justifyContent: "end" }}>

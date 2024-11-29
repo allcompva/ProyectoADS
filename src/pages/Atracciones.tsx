@@ -21,6 +21,7 @@ import Container from "../components/Container"
 import TableBox from "../components/Table/TableBox"
 import Filters from "../components/Table/Filters"
 import { Link } from "react-router-dom"
+import axios from "axios"
 
 interface Atraccion {
   publicada: boolean
@@ -38,8 +39,13 @@ const GestionAtracciones = () => {
   const [places, setPlaces] = useState<Atraccion[]>([])
 
   useEffect(() => {
-    if (!atracciones?.data) return
-    setPlaces(atracciones.data)
+    /*if (!atracciones?.data) return
+    setPlaces(atracciones.data)*/
+    const fetchData = async () => {
+      const response = await axios.get('https://recreas.net/BackEnd/Tur_publicaciones/GetByCategoria?id=1');
+      setPlaces(response.data);
+      fetchData();
+    };
   }, [atracciones])
   useEffect(() => {
     const filteredAtracciones = () => {
